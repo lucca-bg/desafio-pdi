@@ -15,7 +15,7 @@ public class Desafio extends JFrame {
     private static final int IMAGE_HEIGHT = 856;
 
     public Desafio() {
-        setTitle("Desafio - Visualizador de Imagem PNG");
+        setTitle("Desafio - Processamento Digital de Imagens");
         setSize(IMAGE_WIDTH, IMAGE_HEIGHT + 80); // Espaço extra para o botão
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -40,7 +40,7 @@ public class Desafio extends JFrame {
         };
 
         // Botão para carregar imagem
-        JButton loadButton = new JButton("Carregar Imagem PNG");
+        JButton loadButton = new JButton("Carregar Imagem");
         loadButton.addActionListener(e -> carregarImagem(imagePanel));
 
         // Layout
@@ -72,9 +72,7 @@ public class Desafio extends JFrame {
                 } else {
                     image = binarizarImagem(image);
                     image = limparImagem(image);
-                    int count = contarComprimidos(image);
-
-                    JOptionPane.showMessageDialog(this, "Comprimidos detectados: " + count);
+                    contarComprimidos(image);
                 }
 
                 panel.repaint();
@@ -84,7 +82,7 @@ public class Desafio extends JFrame {
         }
     }
 
-private int contarComprimidos(BufferedImage img) {
+private void contarComprimidos(BufferedImage img) {
     int width = img.getWidth();
     int height = img.getHeight();
     boolean[][] visited = new boolean[width][height];
@@ -118,14 +116,17 @@ private int contarComprimidos(BufferedImage img) {
     // Mostrar estatísticas
     StringBuilder sb = new StringBuilder("Resumo por categoria:\n\n");
 
-    sb.append("Incompletos: ").append(pequenos).append("\n");
-    sb.append("Médios: ").append(medios).append("\n");
-    sb.append("Grandes: ").append(grandes).append("\n");
+    sb.append("Total: ").append(grandes + medios).append("\n");
+    sb.append("Quebrados: ").append(pequenos).append("\n");
+    sb.append("Redondos: ").append(medios).append("\n");
+    sb.append("Cápsulas: ").append(grandes).append("\n");
 
-    JOptionPane.showMessageDialog(this, sb.toString());
-
-    // Total é a soma de todos os válidos menos os pequenos, que são comprimidos incompletos
-    return medios + grandes;
+    JTextArea textArea = new JTextArea(sb.toString());
+    textArea.setEditable(false);
+    textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+    JScrollPane scrollPane = new JScrollPane(textArea);
+    scrollPane.setPreferredSize(new Dimension(350, 150));
+    JOptionPane.showMessageDialog(this, scrollPane, "Resumo por categoria", JOptionPane.INFORMATION_MESSAGE);
 }
 
 
@@ -239,11 +240,9 @@ private int floodFillCollect(BufferedImage img, boolean[][] visited, int startX,
     return area;
 }
 
-
-
 private boolean isBranco(int rgb) {
     Color c = new Color(rgb);
-    int limiar = 200; // ajustável
+    int limiar = 200; 
     return c.getRed() > limiar && c.getGreen() > limiar && c.getBlue() > limiar;
 }
 
