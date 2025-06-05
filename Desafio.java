@@ -72,10 +72,10 @@ public class Desafio extends JFrame {
                 } else {
                     image = binarizarImagem(image);
                     image = limparImagem(image);
+                    panel.repaint();
                     contarComprimidos(image);
                 }
 
-                panel.repaint();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Erro ao carregar imagem: " + ex.getMessage());
             }
